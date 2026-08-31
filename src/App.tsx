@@ -89,7 +89,7 @@ function AppContent() {
 
         {/* 2. Explore Ethiopia & Destinations by Region */}
         <ExploreEthiopiaSection
-          onSelectDestination={(dest) => setSel0ectedDestination(dest)}
+          onSelectDestination={(dest) => setSelectedDestination(dest)}
           onBookExperience={handleBookExperience}
         />
 

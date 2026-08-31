@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
-import defaultSquare from '../assets/images/hindek_founder_sq_1787811902566.jpg';
-import defaultPortrait from '../assets/images/hindek_founder_vert_1787811918481.jpg';
+import defaultSquare from '../assets/images/hindek_founder_portrait_real_1788060971762.jpg';
+import defaultPortrait from '../assets/images/hindek_founder_vert_real_1788060985808.jpg';
 import { 
   idbGet, 
   idbSet, 
@@ -61,10 +61,10 @@ interface CustomPhotoContextType {
   syncStatus: 'synced' | 'local_only' | 'syncing' | 'error';
 }
 
-const STORAGE_KEY_FOUNDER = 'bridge_ethiopia_founder_photos_v3';
-const STORAGE_KEY_CUSTOM_MAP = 'bridge_ethiopia_custom_photos_map_v1';
-const IDB_KEY_FOUNDER = 'founder_photos_store';
-const IDB_KEY_CUSTOM_MAP = 'custom_photos_map_store';
+const STORAGE_KEY_FOUNDER = 'bridge_ethiopia_founder_photos_v6';
+const STORAGE_KEY_CUSTOM_MAP = 'bridge_ethiopia_custom_photos_map_v6';
+const IDB_KEY_FOUNDER = 'founder_photos_store_v6';
+const IDB_KEY_CUSTOM_MAP = 'custom_photos_map_store_v6';
 
 const defaultFounderPhotos: FounderPhotos = {
   portrait: defaultPortrait,
@@ -244,7 +244,14 @@ export const CustomPhotoProvider: React.FC<{ children: ReactNode }> = ({ childre
 
     async function initStorage() {
       try {
-        // 1. Fetch any globally published photos from the server so all visitors see them!
+        // Purge legacy obsolete storage keys so user's browser updates to latest bundled master photos
+        try {
+          ['bridge_ethiopia_founder_photos', 'bridge_ethiopia_founder_photos_v2', 'bridge_ethiopia_founder_photos_v3', 'bridge_ethiopia_founder_photos_v4', 'bridge_ethiopia_founder_photos_v5', 'bridge_ethiopia_custom_photos_map_v1'].forEach(k => {
+            localStorage.removeItem(k);
+          });
+        } catch {}
+
+        // 1. Fetch any globally published photos from the server if running with server backend
         try {
           const serverRes = await fetch('/api/published-photos');
           if (serverRes.ok) {

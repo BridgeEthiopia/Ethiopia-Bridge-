@@ -222,7 +222,7 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="text-xs text-[#52483E] flex-1">
                 <div className="flex items-center justify-between">
                   <p className="font-semibold text-[#1E3A2F] text-sm">
-                    {FOUNDER_INFO.name} <span className="text-[#8C7E6D] font-normal text-xs">• Founder & Local Guide</span>
+                    {FOUNDER_INFO.name} <span className="text-[#8C7E6D] font-normal text-xs">• Founder & General Manager</span>
                   </p>
                   <div className="flex items-center gap-2">
                     <button

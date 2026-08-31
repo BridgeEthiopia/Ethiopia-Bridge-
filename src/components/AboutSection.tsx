@@ -208,16 +208,16 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 <div className="relative z-10 p-6 text-white space-y-2">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D49A3D]/25 text-[#D49A3D] text-[11px] font-bold tracking-wider uppercase border border-[#D49A3D]/40 backdrop-blur-md">
                     <Sparkles className="w-3 h-3" />
-                    <span>Founder & Local Guide</span>
+                    <span>Founder & General Manager</span>
                   </div>
                   <h3 className="text-2xl font-bold font-serif text-white">
                     {FOUNDER_INFO.name}
                   </h3>
                   <p className="text-xs text-[#E5AC4D] font-medium">
-                    Founder, Bridge Ethiopia • Your Trusted Local Guide
+                    Founder, General Manager & Lead Host • Bridge Ethiopia
                   </p>
                   <p className="text-[11px] text-[#E8E1D5] leading-relaxed pt-1">
-                    Addis Ababa • Cultural Immersion & Experiential Guiding across Ethiopia
+                    Addis Ababa • Tour Leadership, NGO Logistics & Authentic Cultural Experiences
                   </p>
                 </div>
               </div>
@@ -225,7 +225,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               {/* Verified Badge */}
               <div className="absolute -bottom-3 -right-3 bg-[#1E3A2F] text-white py-2 px-3.5 rounded-2xl border-2 border-[#D49A3D] shadow-xl text-xs font-bold flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-[#34A853]" />
-                <span>Your Trusted Local Guide</span>
+                <span>Founder & Tour Director</span>
               </div>
             </div>
 
@@ -234,7 +234,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <div className="space-y-4">
                 <div className="space-y-1">
                   <span className="text-xs uppercase font-bold tracking-wider text-[#B85C38]">
-                    Local Guide & Cultural Experience Host
+                    Founder, General Manager & Cultural Experience Host
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-bold font-serif text-[#1E3A2F]">
                     Meet Hindek
@@ -242,7 +242,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 </div>
 
                 <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF6EE] border-2 border-[#D49A3D]/40 text-[#1E3A2F] text-xs sm:text-sm leading-relaxed font-serif italic">
-                  “I am a local tour guide and cultural experience host in Ethiopia. Bridge Ethiopia is my platform for helping tourists explore Ethiopia through local knowledge and authentic experiences. I also offer Hindek Kitchen, a hands-on cultural cooking experience where visitors learn and practice traditional Ethiopian cooking. It is not a restaurant.”
+                  “I am the Founder and General Manager of Bridge Ethiopia. Bridge Ethiopia is my platform for helping tourists, visitors, and international partners explore Ethiopia with authentic local knowledge, reliable organization, and heartfelt hospitality. I also founded Hindek Kitchen, our hands-on cultural cooking immersion.”
                 </div>
 
                 <p className="text-xs sm:text-sm text-[#5C5247] leading-relaxed">

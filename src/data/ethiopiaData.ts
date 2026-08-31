@@ -20,18 +20,19 @@ import timkatImg from '../assets/images/timkat_gondar_bath_1787814597486.jpg';
 import meskelImg from '../assets/images/meskel_demera_fire_1787814613769.jpg';
 import kulubiImg from '../assets/images/kulubi_pilgrimage_1787814627497.jpg';
 import arbaMinchImg from '../assets/images/arba_minch_dorze_1787901932452.jpg';
+import konsoImg from '../assets/images/konso_village_landscape_1788060581359.jpg';
 
 export const FOUNDER_INFO = {
   name: 'Hindek',
-  title: 'Local Guide & Cultural Experience Host',
-  tagline: 'Your Trusted Local Guide in Ethiopia',
+  title: 'Founder, General Manager & Cultural Experience Host',
+  tagline: 'Founder, Manager & Lead Local Host at Bridge Ethiopia',
   location: 'Addis Ababa, Ethiopia',
   email: 'Hindek.ethiopia@gmail.com',
   phone: '+251 91 221 3888',
   whatsapp: '251912213888',
   whatsappDisplay: '+251 91 221 3888',
   address: 'Bole Sub-City / Meskel Square & Bole Airport Hub, Addis Ababa, Ethiopia',
-  bio: 'Hindek is a local tour guide and cultural experience host in Ethiopia. Bridge Ethiopia is her platform for helping tourists and visitors discover real Ethiopia with local knowledge, guidance, and authentic experiences. She also offers Hindek Kitchen, a hands-on cultural cooking experience where visitors learn and practice traditional Ethiopian and Oromo cooking (it is not a restaurant).',
+  bio: 'Hindek is the Founder, General Manager, and lead cultural experience host of Bridge Ethiopia. She personally oversees all tour operations, NGO logistical assistance, and authentic local experiences to help visitors discover the real Ethiopia with heart, safety, and deep local expertise. She also founded Hindek Kitchen, a signature hands-on cultural cooking immersion where visitors bake 100% Teff Injera and prepare traditional Ethiopian and Oromo dishes.',
   servicesOffered: [
     'Local tour guiding',
     'Helping visitors explore Ethiopia',
@@ -332,7 +333,7 @@ export const DESTINATIONS_DATA: Destination[] = [
     heroImage: omoImg,
     gallery: [
       omoImg,
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Hamer_tribe_Ethiopia.jpg/1280px-Hamer_tribe_Ethiopia.jpg'
+      konsoImg
     ],
     tagline: 'Living Cultural Heritage & Traditional Communities along the Omo River',
     description: 'A UNESCO World Heritage cultural landscape home to over eight distinct indigenous ethnic groups including the Hamer, Mursi, Karo, Dassanech, and Nyangatom. Renowned for rich body art, age-grade ceremonies, and pastoralist traditions.',
@@ -369,7 +370,7 @@ export const DESTINATIONS_DATA: Destination[] = [
     gallery: [
       arbaMinchImg,
       omoImg,
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Hamer_tribe_Ethiopia.jpg/1280px-Hamer_tribe_Ethiopia.jpg'
+      konsoImg
     ],
     tagline: 'Forty Springs, Lake Chamo Crocodile Safari & Dorze Bamboo Mountain Villages',
     description: 'Nestled between Lake Abaya and Lake Chamo in the Great Rift Valley, Arba Minch is the scenic hub of Southern Ethiopia. Take a boat safari to see giant Nile crocodiles and hippos, explore Nechisar National Park plains, and ascend the misty Chencha highlands to experience the towering bamboo beehive houses and Enset (false banana / Kocho) bread traditions of the Dorze master weavers.',
@@ -402,9 +403,9 @@ export const DESTINATIONS_DATA: Destination[] = [
     amharicName: 'የኮንሶ ባህላዊ መልክዓ ምድር',
     region: 'southern-ethiopia',
     regionLabel: 'Southern Heritage Terraces',
-    heroImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Hamer_tribe_Ethiopia.jpg/1280px-Hamer_tribe_Ethiopia.jpg',
+    heroImage: konsoImg,
     gallery: [
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Hamer_tribe_Ethiopia.jpg/1280px-Hamer_tribe_Ethiopia.jpg',
+      konsoImg,
       omoImg
     ],
     tagline: '21 Generations of Dry-Stone Terracing, Carved Wooden Waka Sculptures & Living Gadaa Councils',
@@ -1440,6 +1441,30 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Harar_Jugol_city_walls.jpg/1280px-Harar_Jugol_city_walls.jpg',
     location: 'Harar',
     caption: 'The 16th-century historic stone walls surrounding the ancient city.'
+  },
+  {
+    id: 'gal-10',
+    title: 'Konso Hilltop Terraced Village (UNESCO)',
+    category: 'Southern Ethiopia',
+    imageUrl: konsoImg,
+    location: 'Konso Cultural Landscape',
+    caption: 'Ancient walled stone settlements (Kanta) and dense thatched huts nestled into green agricultural terraces.'
+  },
+  {
+    id: 'gal-11',
+    title: 'Lower Omo Valley Traditional Dance at Sunset',
+    category: 'Southern Ethiopia',
+    imageUrl: omoImg,
+    location: 'Lower Omo Valley, Southern Ethiopia',
+    caption: 'Vibrant cultural community celebration and dance at golden sunset.'
+  },
+  {
+    id: 'gal-12',
+    title: 'Kafa Wild Coffee Cloud Rainforest (UNESCO Biosphere)',
+    category: 'Coffee',
+    imageUrl: kafaImg,
+    location: 'Kafa Biosphere Reserve, Southwestern Ethiopia',
+    caption: 'Sunlight filtering through the ancient misty cloud forest where Coffea Arabica originated wild in the shade of mossy giant trees.'
   }
 ];
 
