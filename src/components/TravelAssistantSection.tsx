@@ -9,22 +9,37 @@ import {
   Plane, 
   Headphones,
   CheckCircle,
-  MessageCircle
+  MessageCircle,
+  Landmark,
+  HandHeart,
+  ArrowRight
 } from 'lucide-react';
 import { FOUNDER_INFO } from '../data/ethiopiaData';
 
 interface AssistantProps {
   onContactSupport: (serviceName: string) => void;
+  onOpenCommunityNgo?: () => void;
 }
 
 export const TravelAssistantSection: React.FC<AssistantProps> = ({
   onContactSupport,
+  onOpenCommunityNgo,
 }) => {
   const services = [
     {
       icon: Plane,
       title: 'Bole Airport Meet & Greet',
       description: 'Personal greeting right outside international arrivals at Addis Ababa Bole Airport with private transfer to your hotel.'
+    },
+    {
+      icon: Landmark,
+      title: 'Government Offices & Permit Liaison',
+      description: 'Guidance finding and navigating Ethiopian government offices (Immigration, Foreign Affairs, Tourism, Customs, Kebele administrations) backed by Hindek\'s international NGO experience.'
+    },
+    {
+      icon: HandHeart,
+      title: 'School, Health & Orphanage Support',
+      description: 'Transparent facilitation for visitors wishing to donate books, medical supplies, or support local orphanages and village schools in person.'
     },
     {
       icon: Smartphone,
@@ -34,7 +49,7 @@ export const TravelAssistantSection: React.FC<AssistantProps> = ({
     {
       icon: Car,
       title: 'Private 4WD & City Transport',
-      description: 'Reliable Toyota Land Cruisers with licensed, safety-trained drivers for rugged highland routes and smooth city trips.'
+      description: 'Reliable Toyota Land Cruisers with licensed, safety-trained drivers for rugged highland routes, NGO field trips, and smooth city trips.'
     },
     {
       icon: Languages,
@@ -103,6 +118,42 @@ export const TravelAssistantSection: React.FC<AssistantProps> = ({
               </div>
             );
           })}
+        </div>
+
+        {/* Community Giving & Government / NGO Guidance Banner */}
+        <div className="rounded-3xl p-6 sm:p-8 bg-[#FAF0E6] border border-[#E8DACB] flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1E3A2F]/10 text-[#1E3A2F] text-[11px] font-bold uppercase tracking-wider">
+              <HandHeart className="w-3.5 h-3.5 text-[#B85C38]" />
+              <span>Giving Back & NGO Guidance</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold font-serif text-[#1E3A2F]">
+              Support Schools, Health Centers, Orphanages or Need NGO & Government Liaison?
+            </h3>
+            <p className="text-xs sm:text-sm text-[#5C5247] leading-relaxed max-w-3xl">
+              Hindek has direct experience working with international NGOs and helps travelers facilitate verified, 100% direct donations to village schools, rural health clinics, and children's shelters, as well as navigating Ethiopian government ministries and administrative offices.
+            </p>
+          </div>
+
+          <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            {onOpenCommunityNgo ? (
+              <button
+                onClick={onOpenCommunityNgo}
+                className="px-5 py-3 rounded-xl bg-[#1E3A2F] hover:bg-[#152B23] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors shadow-xs"
+              >
+                <span>View Support & NGO Guide</span>
+                <ArrowRight className="w-4 h-4 text-[#D49A3D]" />
+              </button>
+            ) : (
+              <a
+                href="#community-ngo-section"
+                className="px-5 py-3 rounded-xl bg-[#1E3A2F] hover:bg-[#152B23] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors shadow-xs"
+              >
+                <span>View Support & NGO Guide</span>
+                <ArrowRight className="w-4 h-4 text-[#D49A3D]" />
+              </a>
+            )}
+          </div>
         </div>
 
         {/* 24/7 WhatsApp Assistance Strip */}

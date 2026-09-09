@@ -23,6 +23,7 @@ import {
   Info
 } from 'lucide-react';
 import { FOUNDER_INFO } from '../data/ethiopiaData';
+import { useInquiries } from '../context/InquiriesContext';
 
 interface PlanTripModalProps {
   isOpen: boolean;
@@ -48,6 +49,7 @@ export const PlanMyTripModal: React.FC<PlanTripModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { addInquiry } = useInquiries();
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState<Partial<PlanTripRequest>>({
     fullName: '',
@@ -142,6 +144,18 @@ export const PlanMyTripModal: React.FC<PlanTripModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+
+    addInquiry({
+      fullName: formData.fullName || 'Traveler',
+      email: formData.email || '',
+      phone: formData.phoneOrWhatsApp,
+      serviceOrEvent: `Custom Trip Plan (${formData.travelPace || 'Tailored'})`,
+      destination: (formData.preferredRegions || []).join(', ') || 'Nationwide / Flexible',
+      date: formData.travelDates || 'Flexible dates',
+      numberOfGuests: Number(formData.numberOfTravelers || 2),
+      specialRequests: `Interests: ${(formData.interests || []).join(', ') || 'General'}. Budget: ${formData.budgetTier || 'Standard'}. Notes: ${formData.specialRequirements || 'None'}`,
+      type: 'custom-trip',
+    });
   };
 
   return (

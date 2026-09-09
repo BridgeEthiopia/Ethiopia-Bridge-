@@ -242,3 +242,23 @@ export interface NgoInquiry {
   specialLogistics: string;
   createdAt: string;
 }
+
+export interface CoffeePackage {
+  id: string;
+  title: string;
+  weight: string;
+  roastType: string;
+  description: string;
+  priceUSD: number;
+  priceETB: number;
+  badge?: string;
+  imageUrl: string;
+  photoKey: string;
+  grindOptions: string[];
+  features: string[];
+  inStock: boolean;
+  purpose?: string;
+  tier?: 'retail' | 'commercial' | 'wholesale';
+  isWholesale?: boolean;
+}
+

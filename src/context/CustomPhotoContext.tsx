@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
-import defaultSquare from '../assets/images/hindek_founder_portrait_real_1788060971762.jpg';
-import defaultPortrait from '../assets/images/hindek_founder_vert_real_1788060985808.jpg';
+import defaultSquare from '../assets/images/hindek_real_photo_square.jpg';
+import defaultPortrait from '../assets/images/hindek_real_photo_portrait.jpg';
 import { 
   idbGet, 
   idbSet, 
@@ -54,6 +54,13 @@ interface CustomPhotoContextType {
   setIsAdminMode: (active: boolean) => void;
   toggleAdminMode: () => void;
 
+  // Founder Security & PIN Authentication (Only Hindek can upload)
+  isPinModalOpen: boolean;
+  openPinModal: () => void;
+  closePinModal: () => void;
+  verifyPin: (pin: string) => Promise<{ success: boolean; message: string }>;
+  logoutFounder: () => void;
+
   // Global Live Publishing to Server
   publishAllPhotosGlobally: () => Promise<{ success: boolean; message: string }>;
   isPublishingLive: boolean;
@@ -61,10 +68,10 @@ interface CustomPhotoContextType {
   syncStatus: 'synced' | 'local_only' | 'syncing' | 'error';
 }
 
-const STORAGE_KEY_FOUNDER = 'bridge_ethiopia_founder_photos_v6';
-const STORAGE_KEY_CUSTOM_MAP = 'bridge_ethiopia_custom_photos_map_v6';
-const IDB_KEY_FOUNDER = 'founder_photos_store_v6';
-const IDB_KEY_CUSTOM_MAP = 'custom_photos_map_store_v6';
+const STORAGE_KEY_FOUNDER = 'bridge_ethiopia_founder_photos_v7';
+const STORAGE_KEY_CUSTOM_MAP = 'bridge_ethiopia_custom_photos_map_v7';
+const IDB_KEY_FOUNDER = 'founder_photos_store_v7';
+const IDB_KEY_CUSTOM_MAP = 'custom_photos_map_store_v7';
 
 const defaultFounderPhotos: FounderPhotos = {
   portrait: defaultPortrait,
@@ -163,15 +170,28 @@ export const CustomPhotoProvider: React.FC<{ children: ReactNode }> = ({ childre
   });
 
   const [activeUploadKey, setActiveUploadKey] = useState<keyof FounderPhotos>('portrait');
+  const [pendingTarget, setPendingTarget] = useState<Partial<UploadTargetInfo> | (keyof FounderPhotos) | null>(null);
+
+  // Founder PIN Security Modal State
+  const [isPinModalOpen, setIsPinModalOpen] = useState<boolean>(false);
   
-  // Admin Mode (Defaults to false so public visitors see a clean site without edit buttons)
+  // Admin Mode: strictly defaults to false so public visitors see a clean presentation
   const [isAdminMode, setIsAdminModeState] = useState<boolean>(() => {
     try {
-      return localStorage.getItem('bridge_ethiopia_admin_mode') === 'true';
+      const pin = sessionStorage.getItem('bridge_ethiopia_founder_pin') || localStorage.getItem('bridge_ethiopia_founder_pin');
+      return !!pin && (pin === '2519' || pin.length > 0);
     } catch {
       return false;
     }
   });
+
+  const getFounderPin = (): string => {
+    try {
+      return sessionStorage.getItem('bridge_ethiopia_founder_pin') || localStorage.getItem('bridge_ethiopia_founder_pin') || '2519';
+    } catch {
+      return '2519';
+    }
+  };
 
   const setIsAdminMode = (active: boolean) => {
     setIsAdminModeState(active);
@@ -180,8 +200,64 @@ export const CustomPhotoProvider: React.FC<{ children: ReactNode }> = ({ childre
     } catch {}
   };
 
+  const openPinModal = () => {
+    setIsPinModalOpen(true);
+  };
+
+  const closePinModal = () => {
+    setIsPinModalOpen(false);
+  };
+
+  const verifyPin = async (pin: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch('/api/founder/verify-pin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setIsAdminModeState(true);
+        try {
+          sessionStorage.setItem('bridge_ethiopia_founder_pin', pin);
+          localStorage.setItem('bridge_ethiopia_founder_pin', pin);
+          localStorage.setItem('bridge_ethiopia_admin_mode', 'true');
+        } catch {}
+        return { success: true, message: 'Founder authenticated successfully.' };
+      } else {
+        return { success: false, message: data.error || 'Incorrect PIN.' };
+      }
+    } catch {
+      // Fallback offline verification for founder PIN
+      if (pin === '2519') {
+        setIsAdminModeState(true);
+        try {
+          sessionStorage.setItem('bridge_ethiopia_founder_pin', pin);
+          localStorage.setItem('bridge_ethiopia_founder_pin', pin);
+          localStorage.setItem('bridge_ethiopia_admin_mode', 'true');
+        } catch {}
+        return { success: true, message: 'Founder authenticated.' };
+      }
+      return { success: false, message: 'Incorrect PIN. Only founder Hindek can upload photos.' };
+    }
+  };
+
+  const logoutFounder = () => {
+    setIsAdminModeState(false);
+    try {
+      sessionStorage.removeItem('bridge_ethiopia_founder_pin');
+      localStorage.removeItem('bridge_ethiopia_founder_pin');
+      localStorage.removeItem('bridge_ethiopia_admin_mode');
+    } catch {}
+    setIsUploadModalOpen(false);
+  };
+
   const toggleAdminMode = () => {
-    setIsAdminMode(!isAdminMode);
+    if (isAdminMode) {
+      logoutFounder();
+    } else {
+      openPinModal();
+    }
   };
 
   // Track whether initial storage load from IndexedDB has completed to prevent mount overwrites
@@ -194,10 +270,14 @@ export const CustomPhotoProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   // Helper to sync photos to server in background
   const syncToServerBackground = async (payload: { founderPhotos?: FounderPhotos | Record<string, string>; customPhotos?: Record<string, string> }) => {
+    if (!isAdminMode) return; // Only sync if logged in as founder
     try {
       const res = await fetch('/api/publish-photos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-founder-pin': getFounderPin()
+        },
         body: JSON.stringify(payload),
       });
       if (res.ok) {
@@ -217,7 +297,10 @@ export const CustomPhotoProvider: React.FC<{ children: ReactNode }> = ({ childre
     try {
       const res = await fetch('/api/publish-photos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-founder-pin': getFounderPin()
+        },
         body: JSON.stringify({
           founderPhotos: photos,
           customPhotos: customPhotos,
@@ -246,7 +329,7 @@ export const CustomPhotoProvider: React.FC<{ children: ReactNode }> = ({ childre
       try {
         // Purge legacy obsolete storage keys so user's browser updates to latest bundled master photos
         try {
-          ['bridge_ethiopia_founder_photos', 'bridge_ethiopia_founder_photos_v2', 'bridge_ethiopia_founder_photos_v3', 'bridge_ethiopia_founder_photos_v4', 'bridge_ethiopia_founder_photos_v5', 'bridge_ethiopia_custom_photos_map_v1'].forEach(k => {
+          ['bridge_ethiopia_founder_photos', 'bridge_ethiopia_founder_photos_v2', 'bridge_ethiopia_founder_photos_v3', 'bridge_ethiopia_founder_photos_v4', 'bridge_ethiopia_founder_photos_v5', 'bridge_ethiopia_founder_photos_v6', 'bridge_ethiopia_custom_photos_map_v1', 'bridge_ethiopia_custom_photos_map_v6'].forEach(k => {
             localStorage.removeItem(k);
           });
         } catch {}
@@ -399,7 +482,7 @@ export const CustomPhotoProvider: React.FC<{ children: ReactNode }> = ({ childre
       idbSet(IDB_KEY_CUSTOM_MAP, next).catch(() => {});
       try {
         safeLocalStorageSet(STORAGE_KEY_CUSTOM_MAP, JSON.stringify(next));
-      } catch {}
+      } catch {} 
       return next;
     });
   };
@@ -425,6 +508,15 @@ export const CustomPhotoProvider: React.FC<{ children: ReactNode }> = ({ childre
   };
 
   const openUploadModal = (target?: Partial<UploadTargetInfo> | (keyof FounderPhotos)) => {
+    // If not authenticated as Founder, open PIN modal instead of upload modal
+    if (!isAdminMode) {
+      if (target) {
+        setPendingTarget(target);
+      }
+      setIsPinModalOpen(true);
+      return;
+    }
+
     if (typeof target === 'string') {
       setActiveUploadKey(target);
       setActiveTarget({
@@ -482,6 +574,11 @@ export const CustomPhotoProvider: React.FC<{ children: ReactNode }> = ({ childre
         isAdminMode,
         setIsAdminMode,
         toggleAdminMode,
+        isPinModalOpen,
+        openPinModal,
+        closePinModal,
+        verifyPin,
+        logoutFounder,
         publishAllPhotosGlobally,
         isPublishingLive,
         lastPublishedTime,

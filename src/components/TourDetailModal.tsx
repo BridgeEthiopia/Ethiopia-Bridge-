@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tour } from '../types';
 import { AuthenticImage } from './AuthenticImage';
+import { WriteReviewModal } from './WriteReviewModal';
 import { 
   X, 
   Users, 
@@ -26,6 +27,7 @@ export const TourDetailModal: React.FC<TourDetailProps> = ({
   onClose,
   onBookTour,
 }) => {
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   if (!tour) return null;
 
   return (
@@ -60,10 +62,21 @@ export const TourDetailModal: React.FC<TourDetailProps> = ({
           </div>
 
           <div className="absolute bottom-6 left-6 right-6 text-white space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-[#E5AC4D]">
-              <Star className="w-4 h-4 fill-[#E5AC4D]" />
-              <span className="font-bold">{tour.rating}</span>
-              <span className="text-white/80">({tour.reviewsCount} verified traveler reviews)</span>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 text-xs text-[#E5AC4D]">
+                <Star className="w-4 h-4 fill-[#E5AC4D]" />
+                <span className="font-bold">{tour.rating}</span>
+                <span className="text-white/80">({tour.reviewsCount} verified traveler reviews)</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsReviewModalOpen(true)}
+                className="px-3 py-1 rounded-lg bg-black/50 hover:bg-black/70 border border-white/30 text-white text-xs font-bold flex items-center gap-1.5 backdrop-blur-xs transition-colors cursor-pointer"
+                title="Rate this tour or leave your review"
+              >
+                <Star className="w-3 h-3 text-[#D49A3D] fill-[#D49A3D]" />
+                <span>Rate & Review Tour</span>
+              </button>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold font-serif text-white">
               {tour.title}
@@ -174,6 +187,12 @@ export const TourDetailModal: React.FC<TourDetailProps> = ({
 
         </div>
       </div>
+
+      <WriteReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        defaultExperience={tour.title}
+      />
     </div>
   );
 };

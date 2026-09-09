@@ -41,7 +41,7 @@ export const Hero: React.FC<HeroProps> = ({
   const [isUploading, setIsUploading] = useState(false);
 
   const { t } = useLanguage();
-  const { photos, updatePhoto, setCustomPhoto, openUploadModal } = useCustomPhotoContext();
+  const { photos, updatePhoto, setCustomPhoto, openUploadModal, isAdminMode } = useCustomPhotoContext();
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const showcaseInputRef = useRef<HTMLInputElement>(null);
 
@@ -210,39 +210,43 @@ export const Hero: React.FC<HeroProps> = ({
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
-                <button
-                  type="button"
-                  onClick={() => avatarInputRef.current?.click()}
-                  className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity cursor-pointer"
-                  title="Upload Founder Photo directly from your device"
-                >
-                  <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
-                </button>
+                {isAdminMode && (
+                  <button
+                    type="button"
+                    onClick={() => avatarInputRef.current?.click()}
+                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity cursor-pointer"
+                    title="Upload Founder Photo directly from your device"
+                  >
+                    <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
+                  </button>
+                )}
               </div>
               <div className="text-xs text-[#52483E] flex-1">
                 <div className="flex items-center justify-between">
                   <p className="font-semibold text-[#1E3A2F] text-sm">
                     {FOUNDER_INFO.name} <span className="text-[#8C7E6D] font-normal text-xs">• Founder & General Manager</span>
                   </p>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => avatarInputRef.current?.click()}
-                      className="text-[11px] text-[#1E3A2F] bg-[#FAF6EE] hover:bg-[#D49A3D]/20 border border-[#D49A3D]/40 px-2 py-0.5 rounded-md font-bold flex items-center gap-1 cursor-pointer transition-colors"
-                      title="Upload from device"
-                    >
-                      <Camera className="w-3 h-3 text-[#B85C38]" />
-                      <span>{isUploading ? 'Saving...' : 'Upload Photo'}</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => openUploadModal('heroAvatar')}
-                      className="text-[10px] text-[#8C7E6D] hover:text-[#1E3A2F] hover:underline font-medium cursor-pointer"
-                      title="Open full photo manager"
-                    >
-                      Manager
-                    </button>
-                  </div>
+                  {isAdminMode && (
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => avatarInputRef.current?.click()}
+                        className="text-[11px] text-[#1E3A2F] bg-[#FAF6EE] hover:bg-[#D49A3D]/20 border border-[#D49A3D]/40 px-2 py-0.5 rounded-md font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                        title="Upload from device"
+                      >
+                        <Camera className="w-3 h-3 text-[#B85C38]" />
+                        <span>{isUploading ? 'Saving...' : 'Upload Photo'}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openUploadModal('heroAvatar')}
+                        className="text-[10px] text-[#8C7E6D] hover:text-[#1E3A2F] hover:underline font-medium cursor-pointer"
+                        title="Open full photo manager"
+                      >
+                        Manager
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <p className="italic text-[#6B6155] line-clamp-2 mt-0.5">
                   &quot;Like a trusted Ethiopian friend welcoming you home. Honest advice, local knowledge, and genuine cultural immersion.&quot;
@@ -275,24 +279,26 @@ export const Hero: React.FC<HeroProps> = ({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
                 
-                {/* Direct Upload Trigger on Hero Card */}
-                <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => openUploadModal({
-                      key: 'hero_featured_destination',
-                      title: '🌟 First Page Hero Showcase Photo',
-                      category: 'destination',
-                      currentSrc: heroMountainShowcaseImg,
-                      aspectRatio: 'portrait'
-                    })}
-                    className="px-3 py-1.5 rounded-full bg-black/80 hover:bg-[#1E3A2F] text-white text-xs font-bold backdrop-blur-md border border-[#D49A3D] shadow-lg transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
-                    title="Upload or change photo for this showcase card"
-                  >
-                    <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
-                    <span>Upload Photo</span>
-                  </button>
-                </div>
+                {/* Direct Upload Trigger on Hero Card (Founder Admin Only) */}
+                {isAdminMode && (
+                  <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => openUploadModal({
+                        key: 'hero_featured_destination',
+                        title: '🌟 First Page Hero Showcase Photo',
+                        category: 'destination',
+                        currentSrc: heroMountainShowcaseImg,
+                        aspectRatio: 'portrait'
+                      })}
+                      className="px-3 py-1.5 rounded-full bg-black/80 hover:bg-[#1E3A2F] text-white text-xs font-bold backdrop-blur-md border border-[#D49A3D] shadow-lg transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                      title="Upload or change photo for this showcase card"
+                    >
+                      <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
+                      <span>Upload Photo</span>
+                    </button>
+                  </div>
+                )}
 
                 {/* Floating Caption on Image */}
                 <div className="absolute bottom-5 left-5 right-5 text-white space-y-1 pointer-events-none">

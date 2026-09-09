@@ -8,6 +8,7 @@ import { HindekCoffeeSection } from './components/HindekCoffeeSection';
 import { FoodGallerySection } from './components/FoodGallerySection';
 import { FestivalsSection } from './components/FestivalsSection';
 import { TravelAssistantSection } from './components/TravelAssistantSection';
+import { CommunitySupportSection } from './components/CommunitySupportSection';
 import { AccommodationsSection } from './components/AccommodationsSection';
 import { AboutSection } from './components/AboutSection';
 import { ReviewsSection } from './components/ReviewsSection';
@@ -18,12 +19,17 @@ import { DestinationModal } from './components/DestinationModal';
 import { TourDetailModal } from './components/TourDetailModal';
 import { PlanMyTripModal } from './components/PlanMyTripModal';
 import { BookingModal } from './components/BookingModal';
+import { CommunityInquiryModal } from './components/CommunityInquiryModal';
 import { FounderPhotoUploadModal } from './components/FounderPhotoUploadModal';
+import { FounderPinModal } from './components/FounderPinModal';
 import { PhotoGuideModal } from './components/PhotoGuideModal';
+import { AdminInboxModal } from './components/AdminInboxModal';
+import { RealtimeNotificationToast } from './components/RealtimeNotificationToast';
 import { FounderPhotoProvider, useFounderPhoto } from './context/FounderPhotoContext';
 import { LanguageProvider } from './context/LanguageContext';
+import { InquiriesProvider, useInquiries } from './context/InquiriesContext';
 import { Destination, Tour } from './types';
-import { MessageCircle, Camera, Sparkles } from 'lucide-react';
+import { MessageCircle, Camera, Sparkles, Inbox } from 'lucide-react';
 import { FOUNDER_INFO } from './data/ethiopiaData';
 
 function AppContent() {
@@ -35,7 +41,19 @@ function AppContent() {
   const [bookingService, setBookingService] = useState<string>('Custom Ethiopian Journey & Tour');
   const [bookingDestination, setBookingDestination] = useState<string>('Addis Ababa & Oromia');
   
+  // Community Giving & NGO / Government Guidance Modal State
+  const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
+  const [communityTopic, setCommunityTopic] = useState<'community-support' | 'ngo-guidance'>('community-support');
+  const [communityServiceName, setCommunityServiceName] = useState('');
+
+  const handleOpenCommunityInquiry = (topic: 'community-support' | 'ngo-guidance', serviceName: string) => {
+    setCommunityTopic(topic);
+    setCommunityServiceName(serviceName);
+    setIsCommunityModalOpen(true);
+  };
+  
   const { openUploadModal, isAdminMode } = useFounderPhoto();
+  const { openInbox, unreadCount } = useInquiries();
 
   const handleNavigate = (sectionId: string) => {
     const el = document.getElementById(sectionId);
@@ -67,6 +85,9 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#2E2822] font-sans antialiased selection:bg-[#D49A3D]/30 selection:text-[#1E3A2F]">
       
+      {/* Real-time Notification Banner / Audio Chime Toast */}
+      <RealtimeNotificationToast />
+
       {/* Top Navbar */}
       <Navbar
         onNavigate={handleNavigate}
@@ -74,6 +95,7 @@ function AppContent() {
         onOpenPlanTrip={() => setIsPlanTripOpen(true)}
         onOpenAiAssistant={() => handleNavigate('travel-assistance-section')}
         onOpenAdmin={() => openUploadModal()}
+        onOpenInbox={() => openInbox()}
       />
 
       {/* Main Content Flow */}
@@ -121,12 +143,18 @@ function AppContent() {
           onPlanTripForFestival={handleBookExperience}
         />
 
-        {/* 8. Local Travel Assistance (Airport, SIM, Transport, Translators) */}
+        {/* 8. Local Travel Assistance (Airport, SIM, Transport, Translators, Govt Liaison) */}
         <TravelAssistantSection
           onContactSupport={handleBookExperience}
+          onOpenCommunityNgo={() => handleNavigate('community-ngo-section')}
         />
 
-        {/* 9. Curated Hotels & Lodges */}
+        {/* 9. Community Giving & International NGO / Government Guidance */}
+        <CommunitySupportSection
+          onOpenInquiry={handleOpenCommunityInquiry}
+        />
+
+        {/* 10. Curated Hotels & Lodges */}
         <AccommodationsSection
           onInquireStay={handleBookExperience}
         />
@@ -185,6 +213,14 @@ function AppContent() {
         initialDestination={bookingDestination}
       />
 
+      {/* Community Support & International NGO / Government Guidance Inquiry Modal */}
+      <CommunityInquiryModal
+        isOpen={isCommunityModalOpen}
+        onClose={() => setIsCommunityModalOpen(false)}
+        initialTopic={communityTopic}
+        initialServiceName={communityServiceName}
+      />
+
       {/* Persistent Floating Quick Action Buttons */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col sm:flex-row items-end sm:items-center gap-3">
         {/* Real Photo Uploader Quick Trigger Button (Founder Admin Only) */}
@@ -220,6 +256,9 @@ function AppContent() {
       {/* Real Photo Manager Modal */}
       <FounderPhotoUploadModal />
 
+      {/* Founder PIN Security Authentication Modal */}
+      <FounderPinModal />
+
       {/* Real Photo Authenticity & Upload Guide Modal */}
       <PhotoGuideModal
         isOpen={isPhotoGuideOpen}
@@ -230,6 +269,9 @@ function AppContent() {
         }}
       />
 
+      {/* Admin Booking Inquiries & Messages Modal */}
+      <AdminInboxModal />
+
     </div>
   );
 }
@@ -238,7 +280,9 @@ export default function App() {
   return (
     <LanguageProvider>
       <FounderPhotoProvider>
-        <AppContent />
+        <InquiriesProvider>
+          <AppContent />
+        </InquiriesProvider>
       </FounderPhotoProvider>
     </LanguageProvider>
   );

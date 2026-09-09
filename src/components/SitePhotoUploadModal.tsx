@@ -67,7 +67,14 @@ export const SitePhotoUploadModal: React.FC = () => {
   const [isExportCopied, setIsExportCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { isAdminMode, setIsAdminMode, toggleAdminMode } = useCustomPhotoContext();
+  const { 
+    isAdminMode, 
+    setIsAdminMode, 
+    toggleAdminMode,
+    publishAllPhotosGlobally,
+    isPublishingLive,
+    lastPublishedTime
+  } = useCustomPhotoContext();
 
   // Sync category with activeTarget when modal opens or target changes
   useEffect(() => {
@@ -474,6 +481,53 @@ export const SitePhotoUploadModal: React.FC = () => {
               <p className="text-xs text-[#EAE4D9] leading-relaxed">
                 When <strong>Founder Mode</strong> is active in your browser, you will see quick camera badges and photo upload buttons across all cards on the site. When turned off, the website displays in 100% public traveler mode.
               </p>
+            </div>
+
+            {/* Live Server Publishing Feature */}
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FAF6EE] to-[#FAF8F5] border-2 border-[#D49A3D]/60 shadow-md space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#D49A3D] text-[#1E3A2F] flex items-center justify-center font-bold">
+                    <UploadCloud className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-[#1E3A2F]">
+                      Publish to Live Server (Visible to All Public Visitors)
+                    </h4>
+                    <p className="text-xs text-[#5C5247]">
+                      Syncs your custom photos directly to the web server so every visitor across the globe sees your real photos.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const result = await publishAllPhotosGlobally();
+                    if (result.success) {
+                      setSuccessMessage(result.message);
+                    } else {
+                      setErrorMessage(result.message);
+                    }
+                    setTimeout(() => {
+                      setSuccessMessage('');
+                      setErrorMessage('');
+                    }, 5000);
+                  }}
+                  disabled={isPublishingLive}
+                  className="px-5 py-3 rounded-xl bg-[#D49A3D] hover:bg-[#B85C38] text-[#1E3A2F] hover:text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  <UploadCloud className="w-4 h-4" />
+                  <span>{isPublishingLive ? 'Publishing Live to Server...' : 'Publish All Photos Now'}</span>
+                </button>
+              </div>
+
+              {lastPublishedTime && (
+                <div className="flex items-center gap-1.5 text-[11px] text-[#2E5445] font-semibold bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Last successfully published live: {new Date(lastPublishedTime).toLocaleString()}</span>
+                </div>
+              )}
             </div>
 
             {/* Permanent Storage Explanation & Actions */}

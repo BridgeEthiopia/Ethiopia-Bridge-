@@ -36,7 +36,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
   onOpenContact,
 }) => {
   const [activeTab, setActiveTab] = useState<'founder' | 'ngo' | 'mission'>('founder');
-  const { photos, openUploadModal } = useFounderPhoto();
+  const { photos, openUploadModal, isAdminMode } = useFounderPhoto();
 
   const ngoFocusAreas = [
     {
@@ -195,15 +195,17 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-t from-[#12241D]/90 via-[#12241D]/20 to-transparent pointer-events-none" />
                 
                 {/* Floating Quick Upload Photo Button */}
-                <button
-                  type="button"
-                  onClick={() => openUploadModal('portrait')}
-                  className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full bg-black/75 hover:bg-black text-white text-[11px] font-bold flex items-center gap-1.5 backdrop-blur-sm border border-white/20 shadow-lg cursor-pointer transition-all hover:scale-105"
-                  title="Upload / Change photo"
-                >
-                  <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
-                  <span>Update Photo</span>
-                </button>
+                {isAdminMode && (
+                  <button
+                    type="button"
+                    onClick={() => openUploadModal('portrait')}
+                    className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full bg-black/75 hover:bg-black text-white text-[11px] font-bold flex items-center gap-1.5 backdrop-blur-sm border border-white/20 shadow-lg cursor-pointer transition-all hover:scale-105"
+                    title="Upload / Change photo"
+                  >
+                    <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
+                    <span>Update Photo</span>
+                  </button>
+                )}
 
                 <div className="relative z-10 p-6 text-white space-y-2">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D49A3D]/25 text-[#D49A3D] text-[11px] font-bold tracking-wider uppercase border border-[#D49A3D]/40 backdrop-blur-md">
@@ -320,11 +322,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 </span>
                 
                 <h3 className="text-2xl sm:text-3xl font-bold font-serif text-[#1E3A2F]">
-                  International Visitor & NGO Support
+                  International NGO Support, Community Giving & Government Liaison
                 </h3>
                 
                 <p className="text-xs sm:text-sm text-[#423B33] leading-relaxed font-medium">
-                  Hindek also supports international visitors and organizations who need local assistance in Ethiopia. With experience connected to community development and international NGO work, she can help visitors and organizations navigate local arrangements and access appropriate support.
+                  Hindek has extensive hands-on experience working directly with international NGOs, humanitarian agencies, and visiting research delegations in Ethiopia. Through Bridge Ethiopia, she also helps visitors give back directly to local schools, health centers, and orphanages, while guiding organizations and travelers through Ethiopian government offices and administrative workflows.
                 </p>
               </div>
 
@@ -332,31 +334,31 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <div className="p-5 sm:p-6 rounded-2xl bg-[#1E3A2F] text-white space-y-3 relative overflow-hidden shadow-sm">
                 <div className="flex items-center gap-2 text-[#D49A3D] text-xs font-bold uppercase tracking-wider">
                   <Globe2 className="w-4 h-4 text-[#D49A3D]" />
-                  <span>Local Experience & Assistance</span>
+                  <span>Hindek's Professional NGO & Community Leadership</span>
                 </div>
                 <blockquote className="text-xs sm:text-sm text-[#EAE4DC] leading-relaxed italic font-serif">
-                  “Bridge Ethiopia also provides local assistance and support for international visitors, NGOs, humanitarian organizations, researchers, and development partners visiting or working in Ethiopia. I use my local knowledge and experience to help visitors understand the local environment and connect with appropriate services and resources. Assistance may include local guidance, travel coordination, transportation, accommodation support, cultural orientation, interpretation, meeting coordination, and help navigating appropriate institutions or offices when needed. Bridge Ethiopia is an independent local support and tourism platform, not a government agency.”
+                  “I have significant experience working directly with international NGOs, bilateral organizations, and visiting delegations in Ethiopia. For travelers who wish to give back, Bridge Ethiopia facilitates direct, transparent support for local schools, rural health centers, and verified orphanages — ensuring 100% of your gifts reach the children and communities. For foreign organizations, researchers, and visitors needing official liaison, I provide local guidance to find and navigate Ethiopian government offices (including the Immigration and Citizenship Service, Ministry of Foreign Affairs, Ministry of Tourism, Customs, and regional woreda/kebele administrations). Bridge Ethiopia operates with independent professionalism, cultural integrity, and deep local trust.”
                 </blockquote>
                 <div className="text-[11px] text-[#D49A3D] font-semibold">
-                  — Hindek, Local Guide & Founder, Bridge Ethiopia
+                  — Hindek, Founder & General Manager, Bridge Ethiopia
                 </div>
               </div>
 
               {/* Services List */}
               <div className="space-y-3 pt-1">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-[#8C7E6D]">
-                  Services May Include:
+                  Services & Community Support Areas:
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {[
-                    'Local guidance and orientation',
-                    'Travel and logistics assistance',
-                    'Transportation and accommodation coordination',
-                    'Cultural orientation',
-                    'Interpretation and local communication support',
-                    'Meeting and visit coordination',
-                    'Assistance connecting with appropriate local services and institutions',
-                    'Support for visitors working in education, health, community, and social development activities'
+                    'Giving back to local schools (exercise books, stationery, desks & solar lamps)',
+                    'Supporting rural health centers & clinics (medical kits, maternal packs & water filters)',
+                    'Assisting verified orphanages & children shelters (food provisions, warm clothing & schooling)',
+                    'Navigating Ethiopian government offices (Immigration ICS, Ministry of Foreign Affairs, Tourism & Customs)',
+                    'International NGO field mission logistics & 4WD vehicle fleet with safety drivers',
+                    'High-level bilingual translation & dialogue (Amharic, Afaan Oromoo & English)',
+                    'Community entry protocol, kebele administration liaison & Gadaa elder meetings',
+                    'Meeting coordination, itinerary scheduling & in-country cultural orientation'
                   ].map((svc, idx) => (
                     <div key={idx} className="p-3.5 rounded-xl bg-white border border-[#E8E1D5] flex items-center gap-2.5 text-xs text-[#2E2822] shadow-2xs">
                       <CheckCircle className="w-4 h-4 text-[#34A853] flex-shrink-0" />
@@ -370,10 +372,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <div className="p-5 rounded-2xl bg-[#FAF0E6] border border-[#E8DACB] space-y-2 text-xs sm:text-sm text-[#423B33]">
                 <div className="flex items-center gap-2 font-bold text-[#B85C38]">
                   <Heart className="w-4 h-4 text-[#B85C38]" />
-                  <span>Responsible Community Support & Volunteering</span>
+                  <span>Ethical Community Support, Schools, Clinics & Orphanages</span>
                 </div>
                 <p className="text-xs text-[#52483E] leading-relaxed">
-                  Bridge Ethiopia also helps connect international visitors who want to support education, schools, health, volunteer work, and community development in Ethiopia. The platform can help visitors find appropriate local organizations and opportunities for responsible community support and volunteering.
+                  Bridge Ethiopia connects travelers and donors with real, verified community needs. Whether bringing a suitcase of school supplies, donating toward clinic water filters, or sponsoring meals for vulnerable children at a local shelter, Hindek guarantees 100% direct handover with photographic confirmation and zero middleman fee.
                 </p>
               </div>
 

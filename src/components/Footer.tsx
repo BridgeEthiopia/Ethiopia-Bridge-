@@ -358,10 +358,10 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => onNavigate('about-section')}
+                  onClick={() => onNavigate('community-ngo-section')}
                   className="hover:text-white transition-colors text-left text-[#D49A3D] font-medium"
                 >
-                  International Visitor & NGO Support
+                  Community & NGO Support (Schools, Health, Orphanages)
                 </button>
               </li>
             </ul>

@@ -35,7 +35,7 @@ export const HindekKitchenSection: React.FC<HindekKitchenProps> = ({
   onOpenPlanTrip,
 }) => {
   const [activeDishTab, setActiveDishTab] = useState<'all' | 'signature' | 'vegan'>('all');
-  const { photos, openUploadModal } = useCustomPhotoContext();
+  const { photos, openUploadModal, isAdminMode } = useCustomPhotoContext();
 
   // Core Pillars of the Hands-On Experience
   const experiencePillars = [
@@ -240,16 +240,18 @@ export const HindekKitchenSection: React.FC<HindekKitchenProps> = ({
                 </p>
               </div>
 
-              {/* Photo Upload Prompt Button */}
-              <button
-                type="button"
-                onClick={() => openUploadModal('kitchenAvatar')}
-                className="absolute top-3 right-3 z-10 px-3 py-1.5 rounded-full bg-black/75 hover:bg-black text-white text-[11px] font-bold flex items-center gap-1.5 backdrop-blur-sm border border-white/20 shadow-md cursor-pointer transition-all"
-                title="Update or upload Hindek Kitchen photos"
-              >
-                <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
-                <span>Upload Kitchen Photo</span>
-              </button>
+              {/* Photo Upload Prompt Button (Founder Admin Only) */}
+              {isAdminMode && (
+                <button
+                  type="button"
+                  onClick={() => openUploadModal('kitchenAvatar')}
+                  className="absolute top-3 right-3 z-10 px-3 py-1.5 rounded-full bg-black/75 hover:bg-black text-white text-[11px] font-bold flex items-center gap-1.5 backdrop-blur-sm border border-white/20 shadow-md cursor-pointer transition-all"
+                  title="Update or upload Hindek Kitchen photos"
+                >
+                  <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
+                  <span>Upload Kitchen Photo</span>
+                </button>
+              )}
             </div>
 
             {/* Note on Authenticity */}
@@ -258,13 +260,15 @@ export const HindekKitchenSection: React.FC<HindekKitchenProps> = ({
                 <ShieldCheck className="w-4 h-4 text-[#34A853]" />
                 <span>Authentic cultural space • No fake AI imagery</span>
               </span>
-              <button
-                type="button"
-                onClick={() => openUploadModal('kitchenAvatar')}
-                className="text-[11px] font-bold text-[#B85C38] hover:underline cursor-pointer"
-              >
-                Manage Photos
-              </button>
+              {isAdminMode && (
+                <button
+                  type="button"
+                  onClick={() => openUploadModal('kitchenAvatar')}
+                  className="text-[11px] font-bold text-[#B85C38] hover:underline cursor-pointer"
+                >
+                  Manage Photos
+                </button>
+              )}
             </div>
           </div>
 
@@ -396,18 +400,20 @@ export const HindekKitchenSection: React.FC<HindekKitchenProps> = ({
 
             {/* Filter Tabs & Upload Button */}
             <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={() => openUploadModal({
-                  key: 'kitchen-dish-teff-injera',
-                  title: 'Hindek Kitchen Cooking Photos',
-                  category: 'food',
-                })}
-                className="px-3 py-1.5 rounded-xl bg-white border border-[#E8DACB] hover:border-[#1E3A2F] text-xs font-bold text-[#1E3A2F] flex items-center gap-1.5 shadow-xs cursor-pointer"
-              >
-                <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
-                <span>Upload Dish Photos</span>
-              </button>
+              {isAdminMode && (
+                <button
+                  type="button"
+                  onClick={() => openUploadModal({
+                    key: 'kitchen-dish-teff-injera',
+                    title: 'Hindek Kitchen Cooking Photos',
+                    category: 'food',
+                  })}
+                  className="px-3 py-1.5 rounded-xl bg-white border border-[#E8DACB] hover:border-[#1E3A2F] text-xs font-bold text-[#1E3A2F] flex items-center gap-1.5 shadow-xs cursor-pointer"
+                >
+                  <Camera className="w-3.5 h-3.5 text-[#D49A3D]" />
+                  <span>Upload Dish Photos</span>
+                </button>
+              )}
 
               <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white border border-[#E8DACB]">
                 <button
@@ -474,19 +480,21 @@ export const HindekKitchenSection: React.FC<HindekKitchenProps> = ({
                       </span>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => openUploadModal({
-                        key: `kitchen-dish-${dish.id}`,
-                        title: dish.name,
-                        category: 'food',
-                        currentSrc: dish.image,
-                      })}
-                      className="absolute top-3.5 right-3.5 z-10 px-2 py-1 rounded-lg bg-black/65 hover:bg-black/85 text-white text-[10px] font-semibold flex items-center gap-1 backdrop-blur-xs transition-all cursor-pointer"
-                    >
-                      <Camera className="w-3 h-3 text-[#D49A3D]" />
-                      <span>Upload</span>
-                    </button>
+                    {isAdminMode && (
+                      <button
+                        type="button"
+                        onClick={() => openUploadModal({
+                          key: `kitchen-dish-${dish.id}`,
+                          title: dish.name,
+                          category: 'food',
+                          currentSrc: dish.image,
+                        })}
+                        className="absolute top-3.5 right-3.5 z-10 px-2 py-1 rounded-lg bg-black/65 hover:bg-black/85 text-white text-[10px] font-semibold flex items-center gap-1 backdrop-blur-xs transition-all cursor-pointer"
+                      >
+                        <Camera className="w-3 h-3 text-[#D49A3D]" />
+                        <span>Upload</span>
+                      </button>
+                    )}
 
                     <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
                       <span className="text-[10px] font-bold text-[#E5AC4D] uppercase tracking-wider block">

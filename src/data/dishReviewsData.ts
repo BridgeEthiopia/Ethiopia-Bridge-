@@ -122,5 +122,15 @@ export const saveDishReview = (newReview: Omit<DishReview, 'id' | 'createdAt'>):
   } catch (err) {
     console.error('Failed to save review to localStorage', err);
   }
+
+  // Send to server in background so other visitors can see it too!
+  try {
+    fetch('/api/dish-reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(created)
+    }).catch(() => {});
+  } catch {}
+
   return created;
 };

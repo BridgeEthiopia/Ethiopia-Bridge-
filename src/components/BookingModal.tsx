@@ -18,6 +18,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { FOUNDER_INFO } from '../data/ethiopiaData';
+import { useInquiries } from '../context/InquiriesContext';
 
 export interface BookingModalProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   initialService = '',
   initialDestination = '',
 }) => {
+  const { addInquiry, adminEmail, adminWhatsapp, adminPhone } = useInquiries();
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -94,7 +96,21 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     e.preventDefault();
     setSubmitted(true);
 
+    // Save inquiry to admin inbox store with real-time audio toast trigger
+    addInquiry({
+      fullName: formData.name,
+      email: formData.email,
+      phone: formData.phoneOrWhatsApp,
+      serviceOrEvent: formData.serviceOrEvent,
+      destination: formData.destination,
+      date: formData.date,
+      numberOfGuests: Number(formData.numberOfGuests),
+      specialRequests: formData.specialRequests,
+      type: 'booking',
+    });
+
     // Prepare email body for direct admin inbox notification
+    const activeAdminEmail = adminEmail || FOUNDER_INFO.email;
     const subject = encodeURIComponent(`New Booking Request: ${formData.serviceOrEvent} - ${formData.name}`);
     const body = encodeURIComponent(
       `NEW BOOKING / EVENT REQUEST FOR BRIDGE ETHIOPIA\n` +
@@ -111,12 +127,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     );
 
     // Trigger mail client as reliable fallback
-    const mailtoLink = `mailto:${FOUNDER_INFO.email}?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:${activeAdminEmail}?subject=${subject}&body=${body}`;
     const link = document.createElement('a');
     link.href = mailtoLink;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    // We do not force redirect if in iframe, but preserve it for direct actions
   };
 
   const whatsappMessage = encodeURIComponent(

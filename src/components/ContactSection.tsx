@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FOUNDER_INFO } from '../data/ethiopiaData';
 import { useFounderPhoto } from '../context/FounderPhotoContext';
+import { useInquiries } from '../context/InquiriesContext';
 import { 
   Phone, 
   Mail, 
@@ -17,7 +18,8 @@ import {
 
 export const ContactSection: React.FC = () => {
   const [sent, setSent] = useState(false);
-  const { photos, openUploadModal } = useFounderPhoto();
+  const { photos, openUploadModal, isAdminMode } = useFounderPhoto();
+  const { addInquiry } = useInquiries();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -29,6 +31,15 @@ export const ContactSection: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSent(true);
+
+    addInquiry({
+      fullName: formData.name,
+      email: formData.email,
+      phone: formData.phoneOrWhatsApp,
+      serviceOrEvent: `Contact Message: ${formData.subject}`,
+      specialRequests: formData.message,
+      type: 'inquiry',
+    });
   };
 
   return (
@@ -68,14 +79,16 @@ export const ContactSection: React.FC = () => {
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
                   />
-                  <button
-                    type="button"
-                    onClick={() => openUploadModal('contactAvatar')}
-                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity cursor-pointer"
-                    title="Update Photo"
-                  >
-                    <Camera className="w-3.5 h-3.5" />
-                  </button>
+                  {isAdminMode && (
+                    <button
+                      type="button"
+                      onClick={() => openUploadModal('contactAvatar')}
+                      className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity cursor-pointer"
+                      title="Update Photo"
+                    >
+                      <Camera className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
                 <div className="space-y-0.5 flex-1">
                   <div className="flex items-center justify-between">
@@ -83,14 +96,16 @@ export const ContactSection: React.FC = () => {
                       <span>{FOUNDER_INFO.name}</span>
                       <ShieldCheck className="w-3.5 h-3.5 text-[#34A853]" />
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => openUploadModal('contactAvatar')}
-                      className="text-[10px] text-[#B85C38] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer"
-                    >
-                      <Camera className="w-2.5 h-2.5" />
-                      <span>Change Photo</span>
-                    </button>
+                    {isAdminMode && (
+                      <button
+                        type="button"
+                        onClick={() => openUploadModal('contactAvatar')}
+                        className="text-[10px] text-[#B85C38] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer"
+                      >
+                        <Camera className="w-2.5 h-2.5" />
+                        <span>Change Photo</span>
+                      </button>
+                    )}
                   </div>
                   <div className="text-[11px] text-[#B85C38] font-semibold">Founder, Bridge Ethiopia</div>
                   <div className="text-[11px] text-[#8C7E6D]">Ready to help plan your visit to Ethiopia</div>
